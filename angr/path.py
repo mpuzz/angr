@@ -205,6 +205,12 @@ class Path(object):
 
         for p in out:
             p.state._inspect('path_step', simuvex.BP_AFTER)
+
+        if len(out) > 1:
+            states = [p.state for p in out]
+            kwargs = {"forked_states": states}
+            states[0]._inspect('state_fork', simuvex.BP_AFTER, **kwargs)
+            out = [x for x in out if not hasattr(x.state, "kill")]
         return out
 
     def clear(self):
